@@ -1,11 +1,5 @@
-# Rebuild the source code only when needed
-FROM node:23-alpine AS builder
-WORKDIR /app
-
-COPY . .
-
 # Production image, copy all the files and run next
-FROM node:20-alpine AS runner
+FROM node:23-alpine
 
 # Install pm2
 RUN npm install -g pm2
@@ -16,12 +10,12 @@ WORKDIR /app
 RUN apk add --no-cache tzdata
 ENV TZ=Asia/Seoul
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pm2.yml ./pm2.yml
+COPY dist ./dist
+COPY node_modules ./node_modules
+COPY package.json ./package.json
+COPY pm2.yml ./pm2.yml
 
 EXPOSE 4011
 

@@ -37,6 +37,9 @@ jobs:
       - name: Add config
         run: echo "${{secrets.PRODUCTION_CONFIG}}" >> config/config.production.local.yml
 
+      - name: Run build
+        run: pnpm build
+
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1.2.0
 

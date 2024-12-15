@@ -13,7 +13,7 @@ export default function () {
   if (debug || env === 'development') {
     setConfig('local', debug ? 'config.local.yml' : '../../config/config.local.yml');
   }
-  setConfig('common', `config.${env}.local.yml`);
+  setConfig('common-local', `config.${env}.local.yml`);
   setConfig('common', `config.${env}.yml`);
   setConfig('default', 'config.default.yml').overrides({
     port: process.env.PORT || nconf.get('port'),
