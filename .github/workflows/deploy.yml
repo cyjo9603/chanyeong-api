@@ -1,0 +1,38 @@
+name: chanyeong-api-deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'deploy environment'
+        required: true
+        type: choice
+        options:
+          - production
+
+env:
+  DOCKER_CONTAINER: chanyeong-api
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: [self-hosted]
+    steps:
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{secrets.DOCKER_REGISTRY_URL}}
+          username: ${{secrets.DOCKER_REGISTRY_ACCESS_KEY}}
+          password: ${{secrets.DOCKER_REGISTRY_SECRET_KEY}}
+
+      - name: Docker run
+        run: |
+          CONTAINERS=$(docker ps -qa)
+          if [ -z "$CONTAINERS" ];
+          then
+            echo "container not exist"
+          else
+            docker rm -f $(docker ps -q -a)
+          fi
+          docker pull ${{secrets.DOCKER_REGISTRY_URL}}/${{secrets.DOCKER_REPO}}:${{ github.sha }}
+          docker run -dit -p 4011:4011 -e APP_ENV=${{github.event.inputs.environment}} -e NODE_ENV=${{github.event.inputs.environment}} --name $DOCKER_CONTAINER ${{secrets.DOCKER_REGISTRY_URL}}/${{secrets.DOCKER_REPO}}:${{ github.sha }}
