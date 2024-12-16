@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { ClsModule } from 'nestjs-cls';
 import { MongooseModule } from '@nestjs/mongoose';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import configuration from '../config/configuration';
 import { AppController } from './app.controller';
@@ -28,6 +30,16 @@ import { AppHealthIndicator } from './app.health';
         uri: configService.get<string>('db.service.connection.uri'),
         autoCreate: true,
         autoIndex: false,
+      }),
+      inject: [ConfigService],
+    }),
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        debug: false,
+        playground: configService.get('appEnv') === 'development',
+        autoSchemaFile: true,
       }),
       inject: [ConfigService],
     }),
