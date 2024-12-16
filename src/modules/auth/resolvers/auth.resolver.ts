@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard, AccessJwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RefreshValidationPipe } from '../pipes/refresh.validate.pipe';
-
+import { LoginDto } from '../dtos/login.dto';
 @Resolver()
 export class AuthResolver {
   constructor(
@@ -22,9 +22,7 @@ export class AuthResolver {
   @Mutation(() => UserDto)
   async login(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Args('userId', { type: () => String }) _: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Args('password', { type: () => String }) __: string,
+    @Args() _: LoginDto,
   ): Promise<UserDto> {
     return this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
   }

@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
@@ -18,6 +19,8 @@ async function bootstrap() {
     app.use(hpp());
     app.use(helmet());
   }
+
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(configService.get('port'), '0.0.0.0');
 
