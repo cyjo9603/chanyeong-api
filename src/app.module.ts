@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { ClsModule } from 'nestjs-cls';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import configuration from '../config/configuration';
 import { AppController } from './app.controller';
@@ -20,6 +21,15 @@ import { AppHealthIndicator } from './app.health';
       middleware: {
         mount: true,
       },
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('db.service.connection.uri'),
+        autoCreate: true,
+        autoIndex: false,
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
