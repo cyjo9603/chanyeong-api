@@ -5,10 +5,17 @@ import { ClsModule } from 'nestjs-cls';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ObjectId } from 'mongodb';
+
+import { AppController } from '@/app.controller';
+import { AppHealthIndicator } from '@/app.health';
+import { ClsStoreKey } from '@/common/constants/cls.constant';
+
+import { UsersModule } from '@/modules/users/users.module';
 
 import configuration from '../config/configuration';
-import { AppController } from './app.controller';
-import { AppHealthIndicator } from './app.health';
+import { ObjectIdScalar } from './common/graphql/scalars/mongo-object-id.scalar';
+import { DateTimeScalar } from './common/graphql/scalars/date-time.scalar';
 
 @Module({
   imports: [
@@ -22,6 +29,9 @@ import { AppHealthIndicator } from './app.health';
       global: true,
       middleware: {
         mount: true,
+        setup: (cls) => {
+          cls.set(ClsStoreKey.DATA_LOADERS, {});
+        },
       },
     }),
     MongooseModule.forRootAsync({
@@ -40,11 +50,20 @@ import { AppHealthIndicator } from './app.health';
         debug: false,
         playground: configService.get('appEnv') === 'development',
         autoSchemaFile: true,
+        definitions: {
+          customScalarTypeMapping: {
+            DateTime: 'Date',
+            ObjectId,
+          },
+          additionalHeader: "import { ObjectId } from 'mongodb'",
+        },
       }),
+
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppHealthIndicator],
+  providers: [AppHealthIndicator, ObjectIdScalar, DateTimeScalar],
 })
 export class AppModule {}
