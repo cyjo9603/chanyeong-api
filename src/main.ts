@@ -4,7 +4,6 @@ import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import * as hpp from 'hpp';
-import * as csurf from 'csurf';
 
 import { AppModule } from './app.module';
 
@@ -18,7 +17,6 @@ async function bootstrap() {
   if (configService.get('appEnv') !== 'development') {
     app.use(hpp());
     app.use(helmet());
-    app.use(csurf());
   }
 
   await app.listen(configService.get('port'), '0.0.0.0');
