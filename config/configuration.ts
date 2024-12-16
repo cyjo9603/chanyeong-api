@@ -11,10 +11,7 @@ export default function () {
   const debug = process.env.DEBUG === 'true';
   const env = process.env.NODE_ENV || 'development';
   if (debug || env === 'development') {
-    setConfig(
-      'local',
-      debug ? 'config.local.yml' : '../../config/config.local.yml',
-    );
+    setConfig('local', debug ? 'config.local.yml' : '../../config/config.local.yml');
   }
   setConfig('common', `config.${env}.yml`);
   setConfig('default', 'config.default.yml').overrides({

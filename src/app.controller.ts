@@ -1,12 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
+import { AppHealthIndicator } from './app.health';
 
-@Controller()
+@Controller('/health')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly health: HealthCheckService,
+    private readonly appHealthIndicator: AppHealthIndicator,
+  ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @HealthCheck()
+  check() {
+    return this.health.check([async () => this.appHealthIndicator.isHealthy('app')]);
   }
 }
