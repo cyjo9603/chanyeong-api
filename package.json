@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/server": "^4.11.2",
     "@fxts/core": "^1.4.0",
+    "@graphql-tools/utils": "^10.6.4",
     "@nestjs/apollo": "^12.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
@@ -39,6 +40,7 @@
     "crypto-js": "^4.2.0",
     "dataloader": "^2.2.3",
     "graphql": "^16.9.0",
+    "graphql-type-json": "^0.3.2",
     "helmet": "^8.0.0",
     "hpp": "^0.2.3",
     "mongodb": "^6.12.0",
