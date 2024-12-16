@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery, UpdateQuery } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 import { User, UserDocument } from '../schemas/user.schema';
 
@@ -13,5 +14,9 @@ export class UsersMongodbRepository {
 
   async find(filter: FilterQuery<UserDocument>) {
     return this.userModel.find(filter).exec();
+  }
+
+  async findbyIdAndUpdate(id: ObjectId, update: UpdateQuery<UserDocument>) {
+    return this.userModel.findByIdAndUpdate(id, update, { new: true }).exec();
   }
 }

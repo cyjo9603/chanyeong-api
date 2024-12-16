@@ -1,1 +1,13 @@
 port: 4011
+
+auth:
+  jwt:
+    expires:
+      access: '15m'
+      refresh: '14d'
+
+  cookie:
+    name:
+      access: '_cyat'
+      refresh: '_cyrt'
+    maxAge: 1_209_600_000 # 14d

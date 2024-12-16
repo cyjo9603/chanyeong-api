@@ -12,7 +12,7 @@ export type UserDocument = User & Document;
 registerEnumType(UserRole, { name: 'UserRole' });
 
 @InputType({ isAbstract: true })
-@ObjectType()
+@ObjectType({ isAbstract: true })
 @Schema({ collection: 'users' })
 export class User {
   @Field(() => ObjectIdScalar)

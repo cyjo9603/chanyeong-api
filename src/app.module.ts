@@ -11,6 +11,7 @@ import { AppController } from '@/app.controller';
 import { AppHealthIndicator } from '@/app.health';
 import { ClsStoreKey } from '@/common/constants/cls.constant';
 
+import { AuthModule } from '@/modules/auth/auth.module';
 import { UsersModule } from '@/modules/users/users.module';
 
 import configuration from '../config/configuration';
@@ -29,8 +30,10 @@ import { DateTimeScalar } from './common/graphql/scalars/date-time.scalar';
       global: true,
       middleware: {
         mount: true,
-        setup: (cls) => {
+        setup: (cls, req, res) => {
           cls.set(ClsStoreKey.DATA_LOADERS, {});
+          cls.set(ClsStoreKey.REQUEST, req);
+          cls.set(ClsStoreKey.RESPONSE, res);
         },
       },
     }),
@@ -62,6 +65,7 @@ import { DateTimeScalar } from './common/graphql/scalars/date-time.scalar';
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppHealthIndicator, ObjectIdScalar, DateTimeScalar],
