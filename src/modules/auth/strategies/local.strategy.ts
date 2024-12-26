@@ -7,13 +7,11 @@ import { AppClsStore } from '@/common/types/cls.type';
 import { ClsStoreKey } from '@/common/constants/cls.constant';
 
 import { AuthService } from '../services/auth.service';
-import { CryptoService } from '../services/crypto.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
-    private readonly cryptoService: CryptoService,
     private readonly clsService: ClsService<AppClsStore>,
   ) {
     super({
@@ -23,10 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(userId: string, password: string) {
-    const user = await this.authService.validateUser(
-      this.cryptoService.decryptAES(userId),
-      this.cryptoService.decryptAES(password),
-    );
+    const user = await this.authService.validateUser(userId, password);
 
     if (!user) {
       throw new UnauthorizedException();
