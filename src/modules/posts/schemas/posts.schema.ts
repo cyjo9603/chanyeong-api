@@ -43,7 +43,7 @@ export class Post {
   @IsOptional()
   @Field(() => String, { nullable: true })
   @Prop({})
-  titleImage?: string;
+  thumbnail?: string;
 
   @MaxLength(20, { each: true })
   @IsOptional()
