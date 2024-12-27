@@ -11,6 +11,7 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard, AccessJwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RefreshValidationPipe } from '../pipes/refresh.validate.pipe';
 import { LoginDto } from '../dtos/login.dto';
+import { RefreshDto } from '../dtos/refresh.dto';
 @Resolver()
 export class AuthResolver {
   constructor(
@@ -24,13 +25,23 @@ export class AuthResolver {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Args() _: LoginDto,
   ): Promise<UserDto> {
-    return this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
-  }
+    const { user } = await this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
 
+    return user;
+  }
   @UseGuards(ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard)
   @UsePipes(RefreshValidationPipe)
   @Mutation(() => UserDto)
   async refresh() {
+    const { user } = await this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
+
+    return user;
+  }
+
+  @UseGuards(ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard)
+  @UsePipes(RefreshValidationPipe)
+  @Mutation(() => RefreshDto)
+  async _refresh() {
     return this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
   }
 

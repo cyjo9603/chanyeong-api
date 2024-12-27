@@ -47,15 +47,17 @@ export class AuthService {
   }
 
   async signIn(payload: UserJwtToken) {
-    this.createAndSetToken(JwtTokenType.ACCESS, payload);
+    const accessToken = this.createAndSetToken(JwtTokenType.ACCESS, payload);
     const refreshToken = this.createAndSetToken(JwtTokenType.REFRESH, payload);
 
-    return this.usersService.updateRefreshToken(new ObjectId(payload.id), refreshToken);
+    const user = await this.usersService.updateRefreshToken(new ObjectId(payload.id), refreshToken);
+
+    return { accessToken, refreshToken, user };
   }
 
   private createAndSetToken(type: JwtTokenType, payload: UserJwtToken) {
     const tokenName = type === JwtTokenType.ACCESS ? this.ACCESS_TOKEN_HEADER_NAME : this.REFRESH_TOKEN_HEADER_NAME;
-    const expires = JwtTokenType.ACCESS ? this.JWT_ACCESS_EXPIRES : this.JWT_REFRESH_EXPIRES;
+    const expires = type === JwtTokenType.ACCESS ? this.JWT_ACCESS_EXPIRES : this.JWT_REFRESH_EXPIRES;
 
     const token = this.jwtService.sign({ ...payload, type }, { expiresIn: expires });
 
