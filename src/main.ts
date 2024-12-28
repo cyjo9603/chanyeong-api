@@ -5,6 +5,7 @@ import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import * as hpp from 'hpp';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 import { AppModule } from './app.module';
 
@@ -14,6 +15,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(compression());
+  app.use(graphqlUploadExpress());
 
   if (configService.get('appEnv') !== 'development') {
     app.use(hpp());

@@ -18,6 +18,7 @@ import { sortConvertDirectiveTransformer } from '@/common/graphql/directives/sor
 import { AuthModule } from '@/modules/auth/auth.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { PostsModule } from '@/modules/posts/posts.module';
+import { ImagesModule } from '@/modules/images/images.module';
 
 import configuration from '../config/configuration';
 import { ObjectIdScalar } from './common/graphql/scalars/mongo-object-id.scalar';
@@ -89,6 +90,7 @@ import { DateTimeScalar } from './common/graphql/scalars/date-time.scalar';
     UsersModule,
     AuthModule,
     PostsModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppHealthIndicator, ObjectIdScalar, DateTimeScalar],

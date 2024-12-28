@@ -11,3 +11,8 @@ auth:
       access: '_cyat'
       refresh: '_cyrt'
     maxAge: 1_209_600_000 # 14d
+
+image-upload:
+  bucketName: 'chanyeong-assets'
+  region: 'kr-standard'
+  url: 'https://kr.object.ncloudstorage.com'
