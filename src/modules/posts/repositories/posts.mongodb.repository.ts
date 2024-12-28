@@ -5,6 +5,7 @@ import { Model, FilterQuery } from 'mongoose';
 import { FindOptions } from '@/common/types/mongoose.type';
 
 import { Post, PostDocument } from '../schemas/posts.schema';
+import { WritePostDto } from '../dtos/create-post.dto';
 
 @Injectable()
 export class PostsMongodbRepository {
@@ -36,6 +37,10 @@ export class PostsMongodbRepository {
     ]);
 
     return { results, totalCount };
+  }
+
+  async create(writePostDto: WritePostDto): Promise<PostDocument> {
+    return this.postModel.create(writePostDto);
   }
 
   async findAllTagsWithCount(): Promise<any> {

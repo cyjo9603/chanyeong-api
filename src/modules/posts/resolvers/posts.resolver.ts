@@ -1,4 +1,4 @@
-import { Resolver, Query, Directive, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Directive, Args, Int } from '@nestjs/graphql';
 import { FilterQuery, SortOrder } from 'mongoose';
 
 import { AllowKeysValidationPipe } from '@/common/pipes/allow-keys.validate.pipe';
@@ -8,6 +8,7 @@ import { InputSort } from '@/common/schemas/sort-graphql.schema';
 import { PostsService } from '../services/posts.service';
 import { Post, PostConnection } from '../schemas/posts.schema';
 import { PostDocument } from '../schemas/posts.schema';
+import { WritePostDto } from '../dtos/create-post.dto';
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -40,5 +41,10 @@ export class PostsResolver {
         hasNext: skip + nodes.length < totalCount,
       },
     };
+  }
+
+  @Mutation(() => Post)
+  async writePost(@Args('writePostDto') writePostDto: WritePostDto) {
+    return this.postsService.writePost(writePostDto);
   }
 }
