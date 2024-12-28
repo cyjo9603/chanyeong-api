@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 import { FindOptions } from '@/common/types/mongoose.type';
 
@@ -15,6 +16,10 @@ export class PostsMongodbRepository {
     @InjectModel(Post.name)
     private readonly postModel: Model<PostDocument>,
   ) {}
+
+  async findById(id: ObjectId) {
+    return this.postModel.findById(id);
+  }
 
   async findAll({ filter, sort, skip, limit }: FindOptions<PostDocument>) {
     const query = this.postModel.find({ ...this.DELETED_FILTER, ...filter });
