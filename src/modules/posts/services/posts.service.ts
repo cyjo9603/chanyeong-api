@@ -19,7 +19,7 @@ export class PostsService {
     return this.postsMongodbRepository.findAll(findOptions);
   }
 
-  async writePost(writePostDto: WritePostDto) {
+  async writePost(writePostDto: WritePostDto & { userId: ObjectId }) {
     return this.postsMongodbRepository.create(writePostDto);
   }
 

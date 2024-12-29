@@ -55,6 +55,9 @@ export class Post {
   @Prop({ index: true })
   pickedAt!: Date;
 
+  @Prop({ index: true })
+  userId: ObjectId;
+
   @Field(() => DateTimeScalar)
   createdAt!: Date;
 
