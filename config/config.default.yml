@@ -16,3 +16,6 @@ image-upload:
   bucketName: 'chanyeong-assets'
   region: 'kr-standard'
   url: 'https://kr.object.ncloudstorage.com'
+
+redis:
+  port: 10211

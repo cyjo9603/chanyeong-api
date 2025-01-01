@@ -58,6 +58,10 @@ export class Post {
   @Prop({ index: true })
   userId: ObjectId;
 
+  @Field(() => Int)
+  @Prop({ default: 0 })
+  viewCount: number;
+
   @Field(() => DateTimeScalar)
   createdAt!: Date;
 

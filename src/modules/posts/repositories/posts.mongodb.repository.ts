@@ -58,4 +58,8 @@ export class PostsMongodbRepository {
       { $sort: { count: -1 } },
     ]);
   }
+
+  async increasePostViewCount(id: ObjectId) {
+    return this.postModel.findByIdAndUpdate(id, { $inc: { viewCount: 1 } }, { new: true }).exec();
+  }
 }
