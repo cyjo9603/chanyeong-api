@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery } from 'mongoose';
+import { Model, FilterQuery, RootFilterQuery, UpdateQuery } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 import { FindOptions } from '@/common/types/mongoose.type';
@@ -46,6 +46,10 @@ export class PostsMongodbRepository {
 
   async create(writePostDto: WritePostDto): Promise<PostDocument> {
     return this.postModel.create(writePostDto);
+  }
+
+  async updateOne(filter: RootFilterQuery<PostDocument>, updated: UpdateQuery<PostDocument>) {
+    return this.postModel.findOneAndUpdate(filter, updated, { new: true });
   }
 
   async findAllTagsWithCount(): Promise<any> {

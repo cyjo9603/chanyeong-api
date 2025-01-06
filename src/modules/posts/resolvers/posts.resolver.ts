@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Directive, Args, Int, ResolveField, Parent }
 import { FilterQuery, SortOrder } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
+import { UseGuards } from '@nestjs/common';
 
 import { AllowKeysValidationPipe } from '@/common/pipes/allow-keys.validate.pipe';
 import { InputFilter } from '@/common/schemas/filter-graphql.schema';
@@ -12,11 +13,13 @@ import { ClsStoreKey } from '@/common/constants/cls.constant';
 import { UserDto } from '@/modules/users/dtos/user.dto';
 import { UsersService } from '@/modules/users/services/users.service';
 import { USER_COOKIE } from '@/common/constants/cookie.constant';
+import { AccessJwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 
 import { PostsService } from '../services/posts.service';
 import { Post, PostConnection } from '../schemas/posts.schema';
 import { PostDocument } from '../schemas/posts.schema';
 import { WritePostDto } from '../dtos/create-post.dto';
+import { EditPostDto } from '../dtos/edit-post.dto';
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -60,11 +63,20 @@ export class PostsResolver {
     };
   }
 
+  @UseGuards(AccessJwtAuthGuard)
   @Mutation(() => Post)
   async writePost(@Args('writePostDto') writePostDto: WritePostDto) {
     const userId = this.clsService.get(ClsStoreKey.USER_ID);
 
     return this.postsService.writePost({ ...writePostDto, userId });
+  }
+
+  @UseGuards(AccessJwtAuthGuard)
+  @Mutation(() => Post)
+  async editPost(@Args('editPostDto') { _id, ...editPostDto }: EditPostDto) {
+    const userId = this.clsService.get(ClsStoreKey.USER_ID);
+
+    return this.postsService.editPost(editPostDto, { _id, userId });
   }
 
   @Mutation(() => Post, { nullable: true })

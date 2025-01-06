@@ -7,6 +7,7 @@ import { PostsMongodbRepository } from '../repositories/posts.mongodb.repository
 import { PostDocument } from '../schemas/posts.schema';
 import { WritePostDto } from '../dtos/create-post.dto';
 import { PostsViewCountRedisRepository } from '../repositories/posts-view-count.redis.repository';
+import { EditPostDto } from '../dtos/edit-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -25,6 +26,10 @@ export class PostsService {
 
   async writePost(writePostDto: WritePostDto & { userId: ObjectId }) {
     return this.postsMongodbRepository.create(writePostDto);
+  }
+
+  async editPost(editPostDto: Omit<EditPostDto, '_id'>, findOptions: { _id: ObjectId; userId: ObjectId }) {
+    return this.postsMongodbRepository.updateOne(findOptions, editPostDto);
   }
 
   async getPostTagCount(): Promise<any> {
