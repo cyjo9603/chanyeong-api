@@ -27,12 +27,12 @@ jobs:
 
       - name: Docker run
         run: |
-          CONTAINERS=$(docker ps -qa)
+          CONTAINERS=$(docker ps -qa --filter "name=$DOCKER_CONTAINER")
           if [ -z "$CONTAINERS" ];
           then
             echo "container not exist"
           else
-            docker rm -f $(docker ps -q -a)
+            docker rm -f $(docker ps -q -a --filter "name=$DOCKER_CONTAINER")
           fi
           docker pull ${{secrets.DOCKER_REGISTRY_URL}}/${{secrets.DOCKER_REPO}}:${{ github.sha }}
           docker run -dit -p 4011:4011 -e APP_ENV=${{github.event.inputs.environment}} -e NODE_ENV=${{github.event.inputs.environment}} --name $DOCKER_CONTAINER ${{secrets.DOCKER_REGISTRY_URL}}/${{secrets.DOCKER_REPO}}:${{ github.sha }}
