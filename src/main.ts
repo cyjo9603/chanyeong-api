@@ -8,10 +8,17 @@ import * as hpp from 'hpp';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 import { AppModule } from './app.module';
+import { initSentry } from './instrument';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService: ConfigService = app.get(ConfigService);
+
+  const sentryDsn = configService.get('sentry.dsn');
+
+  if (sentryDsn) {
+    initSentry(sentryDsn);
+  }
 
   app.use(cookieParser());
   app.use(compression());

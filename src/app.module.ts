@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
 import { ClsModule } from 'nestjs-cls';
@@ -7,6 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ObjectId } from 'mongodb';
 import { DirectiveLocation, GraphQLDirective } from 'graphql';
+import { SentryModule, SentryGlobalFilter } from '@sentry/nestjs/setup';
 
 import { AppController } from '@/app.controller';
 import { AppHealthIndicator } from '@/app.health';
@@ -87,12 +89,18 @@ import { DateTimeScalar } from './common/graphql/scalars/date-time.scalar';
 
       inject: [ConfigService],
     }),
+    SentryModule.forRoot(),
     UsersModule,
     AuthModule,
     PostsModule,
     ImagesModule,
   ],
   controllers: [AppController],
-  providers: [AppHealthIndicator, ObjectIdScalar, DateTimeScalar],
+  providers: [
+    AppHealthIndicator,
+    ObjectIdScalar,
+    DateTimeScalar,
+    { provide: APP_FILTER, useClass: SentryGlobalFilter },
+  ],
 })
 export class AppModule {}
