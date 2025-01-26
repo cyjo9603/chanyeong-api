@@ -8,6 +8,7 @@ import { PostDocument } from '../schemas/posts.schema';
 import { WritePostDto } from '../dtos/create-post.dto';
 import { PostsViewCountRedisRepository } from '../repositories/posts-view-count.redis.repository';
 import { EditPostDto } from '../dtos/edit-post.dto';
+import { PostCategory } from '../constants/post.constant';
 
 @Injectable()
 export class PostsService {
@@ -32,8 +33,8 @@ export class PostsService {
     return this.postsMongodbRepository.updateOne(findOptions, editPostDto);
   }
 
-  async getPostTagCount(): Promise<any> {
-    return this.postsMongodbRepository.findAllTagsWithCount();
+  async getPostTagCount(category?: PostCategory): Promise<any> {
+    return this.postsMongodbRepository.findAllTagsWithCount(category);
   }
 
   async hasViewHistory(postId: string, userCookie: string) {

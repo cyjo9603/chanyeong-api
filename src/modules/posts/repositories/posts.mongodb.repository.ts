@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery, RootFilterQuery, UpdateQuery } from 'mongoose';
+import { Model, FilterQuery, RootFilterQuery, UpdateQuery, PipelineStage } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
 import { FindOptions } from '@/common/types/mongoose.type';
 
+import { PostCategory } from '../constants/post.constant';
 import { Post, PostDocument } from '../schemas/posts.schema';
 import { WritePostDto } from '../dtos/create-post.dto';
 
@@ -52,15 +53,18 @@ export class PostsMongodbRepository {
     return this.postModel.findOneAndUpdate(filter, updated, { new: true });
   }
 
-  async findAllTagsWithCount(): Promise<any> {
-    return this.postModel.aggregate([
-      { $match: { tags: { $exists: true } } },
-      { $project: { _id: 0, tags: 1 } },
-      { $unwind: '$tags' },
-      { $group: { _id: '$tags', count: { $sum: 1 } } },
-      { $project: { _id: 0, name: '$_id', count: 1 } },
-      { $sort: { count: -1 } },
-    ]);
+  async findAllTagsWithCount(category?: PostCategory): Promise<any> {
+    return this.postModel.aggregate(
+      [
+        category ? { $match: { category } } : undefined,
+        { $match: { tags: { $exists: true } } },
+        { $project: { _id: 0, tags: 1 } },
+        { $unwind: '$tags' },
+        { $group: { _id: '$tags', count: { $sum: 1 } } },
+        { $project: { _id: 0, name: '$_id', count: 1 } },
+        { $sort: { count: -1 } },
+      ].filter((v) => v) as PipelineStage[],
+    );
   }
 
   async increasePostViewCount(id: ObjectId) {
