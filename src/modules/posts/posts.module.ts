@@ -11,6 +11,7 @@ import { PostsService } from './services/posts.service';
 import { PostsResolver } from './resolvers/posts.resolver';
 import { PostTagsResolver } from './resolvers/post-tags.resolver';
 import { PostsViewCountRedisRepository } from './repositories/posts-view-count.redis.repository';
+import { PostsController } from './controllers/posts.controller';
 
 @Module({
   imports: [
@@ -30,5 +31,6 @@ import { PostsViewCountRedisRepository } from './repositories/posts-view-count.r
     UsersModule,
   ],
   providers: [PostsMongodbRepository, PostsViewCountRedisRepository, PostsService, PostsResolver, PostTagsResolver],
+  controllers: [PostsController],
 })
 export class PostsModule {}

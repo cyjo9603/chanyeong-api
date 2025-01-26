@@ -50,4 +50,10 @@ export class PostsService {
 
     return this.postsMongodbRepository.increasePostViewCount(postId);
   }
+
+  async getAllPostIds() {
+    const ids = await this.postsMongodbRepository.findAllOnlyIds();
+
+    return ids.map(({ _id }) => _id);
+  }
 }

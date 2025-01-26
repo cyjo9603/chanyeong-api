@@ -67,6 +67,10 @@ export class PostsMongodbRepository {
     );
   }
 
+  async findAllOnlyIds() {
+    return this.postModel.find({ ...this.DELETED_FILTER }, { _id: 1 }).exec();
+  }
+
   async increasePostViewCount(id: ObjectId) {
     return this.postModel.findByIdAndUpdate(id, { $inc: { viewCount: 1 } }, { new: true }).exec();
   }
