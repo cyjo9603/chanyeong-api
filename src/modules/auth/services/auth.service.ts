@@ -18,7 +18,7 @@ export class AuthService {
   private JWT_REFRESH_EXPIRES: string;
   private ACCESS_TOKEN_HEADER_NAME: string;
   private REFRESH_TOKEN_HEADER_NAME: string;
-  private COOKIE_MAX_AGE: number;
+  public COOKIE_MAX_AGE: number;
 
   constructor(
     private readonly usersService: UsersService,
@@ -63,7 +63,7 @@ export class AuthService {
 
     const res = this.clsService.get(ClsStoreKey.RESPONSE);
 
-    res.cookie(tokenName, token, { httpOnly: true, secure: true, maxAge: this.COOKIE_MAX_AGE });
+    res.cookie(tokenName, token, { secure: true, maxAge: this.COOKIE_MAX_AGE });
 
     return token;
   }

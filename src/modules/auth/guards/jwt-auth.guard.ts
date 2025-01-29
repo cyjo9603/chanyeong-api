@@ -45,8 +45,4 @@ const generateJwtAuthGuard = ({ type, name }: GenerateJwtAuthGuardOptions): Type
 };
 
 export const AccessJwtAuthGuard = generateJwtAuthGuard({ type: JwtTokenType.ACCESS });
-export const ExpiredAccessJwtAuthGuard = generateJwtAuthGuard({
-  type: JwtTokenType.ACCESS,
-  name: 'expired-access-jwt',
-});
 export const RefreshJwtAuthGuard = generateJwtAuthGuard({ type: JwtTokenType.REFRESH });

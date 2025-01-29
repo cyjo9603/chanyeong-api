@@ -8,7 +8,7 @@ import { UserDto } from '@/modules/users/dtos/user.dto';
 
 import { AuthService } from '../services/auth.service';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
-import { ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard, AccessJwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RefreshJwtAuthGuard, AccessJwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RefreshValidationPipe } from '../pipes/refresh.validate.pipe';
 import { LoginDto } from '../dtos/login.dto';
 import { RefreshDto } from '../dtos/refresh.dto';
@@ -29,7 +29,7 @@ export class AuthResolver {
 
     return user;
   }
-  @UseGuards(ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard)
+  @UseGuards(RefreshJwtAuthGuard)
   @UsePipes(RefreshValidationPipe)
   @Mutation(() => UserDto)
   async refresh() {
@@ -38,11 +38,15 @@ export class AuthResolver {
     return user;
   }
 
-  @UseGuards(ExpiredAccessJwtAuthGuard, RefreshJwtAuthGuard)
+  @UseGuards(RefreshJwtAuthGuard)
   @UsePipes(RefreshValidationPipe)
   @Mutation(() => RefreshDto)
   async _refresh() {
-    return this.authService.signIn({ id: this.clsService.get(ClsStoreKey.USER_ID) });
+    const { accessToken, refreshToken, user } = await this.authService.signIn({
+      id: this.clsService.get(ClsStoreKey.USER_ID),
+    });
+
+    return { accessToken, refreshToken, me: user, maxAge: this.authService.COOKIE_MAX_AGE };
   }
 
   @UseGuards(AccessJwtAuthGuard)

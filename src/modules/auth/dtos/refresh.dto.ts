@@ -1,4 +1,6 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+
+import { UserDto } from '@/modules/users/dtos/user.dto';
 
 @ObjectType()
 export class RefreshDto {
@@ -7,4 +9,10 @@ export class RefreshDto {
 
   @Field(() => String)
   refreshToken: string;
+
+  @Field(() => Int)
+  maxAge: number;
+
+  @Field(() => UserDto)
+  me: UserDto;
 }
